@@ -1,0 +1,38 @@
+{
+  "name": "@ofeenee/user",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "A class for validating, verifying, and managing a user... and more.",
+  "main": "User.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ofeenee/user.git"
+  },
+  "keywords": [
+    "User"
+  ],
+  "author": "ofeenee <ofeenee@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ofeenee/user/issues"
+  },
+  "homepage": "https://github.com/ofeenee/user#readme",
+  "dependencies": {
+    "@ofeenee/email": "^0.0.16",
+    "@ofeenee/id": "^0.0.8",
+    "@ofeenee/password": "^0.0.11",
+    "@ofeenee/phone": "^0.0.8",
+    "@ofeenee/role": "^0.0.3",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.1"
+  }
+}
