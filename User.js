@@ -5,7 +5,7 @@ import Phone from '@ofeenee/phone';
 import Role from '@ofeenee/role';
 
 
-function User({id, email, password, phone, role, created_at, updated_at } = {}) {
+function User({id, email, password, phone, role} = {}) {
   try {
     const ROLES = ['admin', 'vip', 'premium', 'member', 'basic'];
     Object.freeze(ROLES);
