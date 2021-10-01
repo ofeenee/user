@@ -93,5 +93,5 @@ export default User;
 
 
 // testing
-const user = new User();
-console.log(user);
+// const user = new User();
+// console.log(user);
