@@ -7,7 +7,7 @@ import Role from '@ofeenee/role';
 import validator from 'validator';
 
 
-function User({id, email, password, phone, role} = {}, returning = false) {
+function User({id, email, password, phone, role} = {}, returning = null) {
   try {
     const ROLES = ['admin', 'vip', 'premium', 'member', 'basic'];
     Object.freeze(ROLES);
