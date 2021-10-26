@@ -7,7 +7,7 @@ import Role from '@ofeenee/role';
 import validator from 'validator';
 
 
-function User({id, email, password, phone, role} = {}) {
+function User({id, email, password, phone, role} = {}, returning = false) {
   try {
     const ROLES = ['admin', 'vip', 'premium', 'member', 'basic'];
     Object.freeze(ROLES);
@@ -20,6 +20,10 @@ function User({id, email, password, phone, role} = {}) {
     });
 
     Object.defineProperties(this, {
+      returning: {
+        value: returning,
+        enumerable: true,
+      },
       id: {
         value: new ID(id),
         enumerable: true
