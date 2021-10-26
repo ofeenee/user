@@ -1,7 +1,7 @@
 {
   "name": "@ofeenee/user",
   "type": "module",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A class for validating, verifying, and managing a user... and more.",
   "main": "User.js",
   "directories": {
