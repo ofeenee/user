@@ -4,6 +4,8 @@ import Password from "@ofeenee/password";
 import Phone from '@ofeenee/phone';
 import Role from '@ofeenee/role';
 
+import validator from 'validator';
+
 
 function User({id, email, password, phone, role} = {}) {
   try {
@@ -80,8 +82,8 @@ function User({id, email, password, phone, role} = {}) {
         },
         enumerable: true
       },
-
     });
+
   }
   catch (error) {
     throw error;
@@ -89,9 +91,26 @@ function User({id, email, password, phone, role} = {}) {
 }
 
 
+Object.defineProperty(User, 'validate', {
+    value: Object.create(null, {
+      id: {
+        value: ID.validate,
+        enumerable: true
+      },
+      email: {
+        value: Email.validate,
+        enumerable: true
+      },
+      phone: {
+        value: Phone.validate,
+        enumerable: true
+      },
+      password: {
+        value: Password.validate,
+        enumerable: true
+      }
+    }),
+    enumerable: true
+  });
+
 export default User;
-
-
-// testing
-// const user = new User();
-// console.log(user);
