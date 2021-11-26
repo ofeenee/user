@@ -1,7 +1,7 @@
 {
   "name": "@ofeenee/user",
   "type": "module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A class for validating, verifying, and managing a user... and more.",
   "main": "User.js",
   "directories": {
@@ -24,10 +24,10 @@
   },
   "homepage": "https://github.com/ofeenee/user#readme",
   "dependencies": {
-    "@ofeenee/email": "^0.0.17",
+    "@ofeenee/email": "^0.0.19",
     "@ofeenee/id": "^0.0.9",
     "@ofeenee/password": "^0.0.12",
-    "@ofeenee/phone": "^0.0.9",
+    "@ofeenee/phone": "^0.0.10",
     "@ofeenee/role": "^0.0.3",
     "dotenv": "^10.0.0"
   },
