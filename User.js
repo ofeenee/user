@@ -4,9 +4,6 @@ import Password from "@ofeenee/password";
 import Phone from '@ofeenee/phone';
 import Role from '@ofeenee/role';
 
-import validator from 'validator';
-
-
 function User({id, email, password, phone, role} = {}, returning = null) {
   try {
     const ROLES = ['admin', 'vip', 'premium', 'member', 'basic'];
@@ -118,3 +115,4 @@ Object.defineProperty(User, 'validate', {
   });
 
 export default User;
+export {ID, Email, Password, Phone, Role};
