@@ -1,8 +1,10 @@
-import ID from '@ofeenee/id';
-import Email from "@ofeenee/email";
-import Password from "@ofeenee/password";
-import Phone from '@ofeenee/phone';
-import Role from '@ofeenee/role';
+import ID from './lib/ID/ID.js';
+import Email from './lib/Email/Email.js';
+import Password from './lib/Password/Password.js';
+import Phone from './lib/Phone/Phone.js';
+import Role from './lib/Role/Role.js';
+import Auth from './lib/Authenticator/Authenticator.js';
+
 
 function User({id, email, password, phone, role} = {}, returning = null) {
   try {
@@ -115,4 +117,4 @@ Object.defineProperty(User, 'validate', {
   });
 
 export default User;
-export {ID, Email, Password, Phone, Role};
+export {ID, Email, Password, Phone, Role, Auth};
