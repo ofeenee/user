@@ -1,20 +1,16 @@
 import {v4 as uuidv4} from 'uuid';
 import validator from 'validator';
+import { ID, IdInstance } from '../../../User';
 const {isUUID} = validator;
 
 
 
-interface fnID{
-  new(id:string):any;
-  (this:any, id: string): any
-};
 
 
-function ID(this: any, id:string):any {
+const ID = function theID(this: any, id:string):IdInstance {
   try {
-    if (new.target === undefined) return new ID(id);
 
-    Object.defineProperties(this, {
+    const oId:IdInstance =  Object.create(null, {
       id: {
         value: validateID(id) ? id : null,
         configurable: true
@@ -53,6 +49,9 @@ function ID(this: any, id:string):any {
         enumerable: true
       },
     });
+
+    return oId;
+
   }
   catch (error) {
     throw error;
@@ -89,7 +88,8 @@ function validateID(string:string):boolean {
 
 function generateNewUUIDv4():string {
   try {
-    return uuidv4();
+    const uuid:string = uuidv4();
+    return uuid;
   }
   catch (error) {
     throw error;
