@@ -1,9 +1,9 @@
 {
   "name": "@ofeenee/user",
-  "type": "commonjs",
-  "version": "0.0.9",
+  "type": "module",
+  "version": "0.0.10",
   "description": "A class for validating, verifying, and managing a user... and more.",
-  "main": "index.js",
+  "main": "main/User.js",
   "directories": {
     "dist": "/dist",
     "src": "/src",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "mocha || true",
-    "dev": "nodemon --watch src index.js"
+    "dev": "nodemon dist/User.js"
   },
   "repository": {
     "type": "git",
