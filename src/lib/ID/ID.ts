@@ -1,17 +1,17 @@
 import {v4 as uuidv4} from 'uuid';
 import validator from 'validator';
-import { ID } from '../../../User';
+import { typeID } from '../../../User';
 const {isUUID} = validator;
 
 
 
-const ID:ID.Interface = function theID(this: any, id:string):ID.Instance {
+const ID:typeID.Interface = function theID(this: any, id:string):typeID.Instance {
   try {
 
     const valid = validateID(id);
     if (!valid) throw new Error('Invalid ID');
 
-    const oId:ID.Instance =  Object.create(null, {
+    const oId:typeID.Instance =  Object.create(null, {
       id: {
         value: id,
         configurable: true

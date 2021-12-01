@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import {typePhone} from '../../../User';
 
 import validator from 'validator';
 const { isMobilePhone } = validator;
@@ -50,22 +51,20 @@ const {
 import twilio from 'twilio';
 const client = twilio(accountSid, authToken);
 
-function Phone(phone:string) {
-  try {
-    if (new.target === undefined) return new Phone(phone);
 
-    if (phone) {
+
+const Phone:typePhone.Interface = function Phone(phone:string): typePhone.Instance {
+  try {
       const valid = validatePhone(phone);
       if (!valid) throw new Error('Invalid phone number');
-    }
 
-    return Object.defineProperties(this, {
+    return Object.create(null, {
       phone: {
-        value: validatePhone(phone) ? phone : null,
+        value: phone,
         configurable: true
       },
       set: {
-        value: (string:string) => {
+        value: function setPhone(string:string):void {
           try {
             if (!validatePhone(string)) {
               throw new Error('phone value is invalid.');
@@ -90,69 +89,62 @@ function Phone(phone:string) {
         enumerable: true
       },
       get: {
-        value: () => {
+        value: function getPhone():string | null {
           if (this.phone) return this.phone;
           else return null;
         },
         enumerable: true
       },
-      verification: {
-        value: Object.defineProperties({}, {
-          sendCodeSMS: {
-            value: async () => {
-              try {
-                if (!this.phone) throw new Error('phone is not yet set.');
+      sendVerificationCodeSMS: {
+        value: async function sendSMS():Promise<object> {
+          try {
+            if (!this.phone) throw new Error('phone is not yet set.');
+            const verification = await client.verify.services(serviceSid)
+              .verifications
+              .create({ to: this.phone, channel: 'sms' });
 
-                const verification = await client.verify.services(serviceSid)
-                  .verifications
-                  .create({ to: this.phone, channel: 'sms' });
-
-                return verification;
-
-              }
-              catch (error) {
-                throw error;
-              }
-            },
-            enumerable: true
-          },
-          sendCodeCall: {
-            value: async () => {
-              try {
-                if (!this.phone) throw new Error('phone is not yet set.');
-
-                const verification = await client.verify.services(serviceSid)
-                  .verifications
-                  .create({ to: this.phone, channel: 'call' });
-
-                return verification;
-
-              }
-              catch (error) {
-                throw error;
-              }
-            },
-            enumerable: true
-          },
-          confirmCode: {
-            value: async (code) => {
-              try {
-                if (typeof code !== 'string' || !code) throw new Error('value is invalid.');
-
-                const verification = await client.verify.services(serviceSid)
-                  .verificationChecks
-                  .create({ to: this.phone, code });
-
-                return verification;
-              }
-              catch (error) {
-                throw error;
-              }
-            },
-            enumerable: true
+            return verification;
           }
-        })
+          catch (error) {
+            throw error;
+          }
+        },
+        enumerable: true
       },
+      sendVerificationCodeCall: {
+        value: async function sendCall():Promise<object> {
+          try {
+            if (!this.phone) throw new Error('phone is not yet set.');
+
+            const verification = await client.verify.services(serviceSid)
+              .verifications
+              .create({ to: this.phone, channel: 'call' });
+
+            return verification;
+          }
+          catch (error) {
+            throw error;
+          }
+        },
+        enumerable: true
+      },
+      confirmVerificationCode: {
+        value: async function(code:string):Promise<object> {
+          try {
+            if (typeof code !== 'string' || !code) throw new Error('value is invalid.');
+
+            const verification = await client.verify.services(serviceSid)
+              .verificationChecks
+              .create({ to: this.phone, code });
+
+            return verification;
+          }
+          catch (error) {
+            throw error;
+          }
+        },
+        enumerable: true
+      }
     });
   }
   catch (error) {

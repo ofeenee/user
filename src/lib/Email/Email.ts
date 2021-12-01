@@ -1,7 +1,7 @@
 import validator from 'validator';
 const {isEmail} = validator;
 
-import {Email} from '../../../User.d';
+import {typeEmail} from '../../../User.d';
 
 function validateEmailAddress(string:string):boolean {
   try {
@@ -33,7 +33,7 @@ const {
 import twilio from 'twilio';
 const client = twilio(accountSid, authToken);
 
-const Email: Email.Interface = function Email(this: any, email: string): Email.Instance {
+const Email: typeEmail.Interface = function Email(this: any, email: string): typeEmail.Instance {
   try {
 
     const valid = validateEmailAddress(email);
