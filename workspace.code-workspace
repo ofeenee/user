@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../Express/Routes"
+		},
+		{
+			"path": "../PostgresDB"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Routes"
+	}
+}

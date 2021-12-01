@@ -1,14 +1,17 @@
 {
   "name": "@ofeenee/user",
-  "type": "module",
-  "version": "0.0.8",
+  "type": "commonjs",
+  "version": "0.0.9",
   "description": "A class for validating, verifying, and managing a user... and more.",
-  "main": "User.js",
+  "main": "index.js",
   "directories": {
-    "test": "test"
+    "dist": "/dist",
+    "src": "/src",
+    "test": "dist/test"
   },
   "scripts": {
-    "test": "mocha || true"
+    "test": "mocha || true",
+    "dev": "nodemon --watch src index.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +37,10 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
+    "@types/node": "^16.11.11",
+    "@types/qrcode-svg": "^1.1.1",
+    "@types/uuid": "^8.3.3",
+    "@types/validator": "^13.7.0",
     "chai": "^4.3.4",
     "mocha": "^9.1.3"
   }
