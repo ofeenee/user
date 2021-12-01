@@ -1,6 +1,8 @@
 import validator from 'validator';
 const {isEmail} = validator;
 
+import {Email} from '../../../User.d';
+
 function validateEmailAddress(string:string):boolean {
   try {
     if (typeof string !== 'string' || !string) return false;
@@ -31,29 +33,20 @@ const {
 import twilio from 'twilio';
 const client = twilio(accountSid, authToken);
 
-interface fnEmail {
-  (email:string):any;
-  new(email:string):any;
-}
-
-
-function Email(this: any, email:string):any {
+const Email: Email.Interface = function Email(this: any, email: string): Email.Instance {
   try {
-    if (!new.target) return new Email(email);
 
-    if (email) {
-      const valid = validateEmailAddress(email);
-      if (!valid) throw new Error('Invalid email address');
-    }
+    const valid = validateEmailAddress(email);
+    if (!valid) throw new Error('Invalid email address');
 
 
-    return Object.defineProperties(this, {
+    return Object.create(null, {
       email: {
         value: validateEmailAddress(email) ? email : null,
         configurable: true
       },
       set: {
-        value: (string:string) => {
+        value: function setEmail(string:string) {
           try {
             string = string?.trim()?.toLowerCase();
             if (!validateEmailAddress(string)) {
@@ -77,52 +70,47 @@ function Email(this: any, email:string):any {
         enumerable: true
       },
       get: {
-        value: () => {
+        value: function getEmail() {
           if (this.email) return this.email;
           else return null;
         },
         enumerable: true
       },
-      verification: {
-        value: Object.defineProperties({}, {
-          sendCode: {
-            value: async () => {
-              try {
-                if (!this.email) throw new Error('email is not yet set.');
+      sendVerificationCode: {
+        value: async function sendCode(): Promise<object> {
+          try {
+            if (!this.email) throw new Error('email is not yet set.');
 
-                const verification = await client.verify.services(serviceSid)
-                  .verifications
-                  .create({ to: this.email, channel: 'email' });
+            const verification = await client.verify.services(serviceSid)
+              .verifications
+              .create({ to: this.email, channel: 'email' });
 
-                return verification;
+            return verification;
 
-              }
-              catch (error) {
-                throw error;
-              }
-            },
-            enumerable: true
-          },
-          confirmCode: {
-            value: async (code:string) => {
-              try {
-                if (!code) throw new Error('value is invalid.');
-
-                const verification = await client.verify.services(serviceSid)
-                  .verificationChecks
-                  .create({ to: this.email, code });
-
-                return verification;
-              }
-              catch (error) {
-                throw error;
-              }
-            },
-            enumerable: true
           }
-        }),
+          catch (error) {
+            throw error;
+          }
+        },
         enumerable: true
       },
+      confirmVerificationCode: {
+        value: async function confirmCode(code:string):Promise<object> {
+          try {
+            if (!code) throw new Error('value is invalid.');
+
+            const verification = await client.verify.services(serviceSid)
+              .verificationChecks
+              .create({ to: this.email, code });
+
+            return verification;
+          }
+          catch (error) {
+            throw error;
+          }
+        },
+        enumerable: true
+      }
     });
   }
   catch (error) {
@@ -134,5 +122,7 @@ Object.defineProperty(Email, 'validate', {
   value: validateEmailAddress,
   enumerable: true
 });
+
+
 
 export default Email;

@@ -1,22 +1,23 @@
 import {v4 as uuidv4} from 'uuid';
 import validator from 'validator';
-import { ID, IdInstance } from '../../../User';
+import { ID } from '../../../User';
 const {isUUID} = validator;
 
 
 
-
-
-const ID = function theID(this: any, id:string):IdInstance {
+const ID:ID.Interface = function theID(this: any, id:string):ID.Instance {
   try {
 
-    const oId:IdInstance =  Object.create(null, {
+    const valid = validateID(id);
+    if (!valid) throw new Error('Invalid ID');
+
+    const oId:ID.Instance =  Object.create(null, {
       id: {
-        value: validateID(id) ? id : null,
+        value: id,
         configurable: true
       },
       set: {
-        value: (string:string) => {
+        value: function setID(string:string) {
           try {
             string = string?.trim()?.toLowerCase();
 
@@ -37,7 +38,7 @@ const ID = function theID(this: any, id:string):IdInstance {
         enumerable: true
       },
       get: {
-        value: () => {
+        value: function getID() {
           try {
             if (this.id) return this.id;
             else return null;
