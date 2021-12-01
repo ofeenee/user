@@ -79,3 +79,28 @@ namespace JWT {
     path?: string;
   }
 }
+
+namespace User {
+  export interface Interface {
+    (o:User.credentials): User.Instance;
+  }
+  export interface credentials {
+    id?: string;
+    email: string;
+    password?: string | undefined | null;
+    phone: string;
+    role?: string | undefined | null;
+    created_at?: string | undefined | null;
+    updated_at?: string | undefined | null;
+  }
+  export interface Instance {
+    id: ID.Instance;
+    email: Email.Instance;
+    password?: string;
+    phone: Phone.Instance;
+    role?: string;
+    created_at: string;
+    updated_at: string;
+    auth: Auth.Instance;
+  }
+}

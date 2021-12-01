@@ -1,96 +1,81 @@
-import ID from './lib/ID/ID';
-import Email from './lib/Email/Email';
-import Password from './lib/Password/Password';
-import Phone from './lib/Phone/Phone';
-import Role from './lib/Role/Role';
-import Auth from './lib/Authenticator/Authenticator';
-import JWT from './lib/JWT/JWT';
+import ID from './lib/ID/ID.js';
+import Email from './lib/Email/Email.js';
+// import Password from './lib/Password/Password.js';
+import Phone from './lib/Phone/Phone.js';
+// import Role from './lib/Role/Role.js';
+import Auth from './lib/Authenticator/Authenticator.js';
+import JWT from './lib/JWT/JWT.js';
+import { User } from '../User.js';
 
 
 // TODO: create an imbedded cache DB for managing users.
 
-interface userInfo {
-  id: string;
-  email: string;
-  password: string;
-  phone: string;
-  role: string;
-};
-interface userInit {
-  id: string;
-  email: string;
-  password: string;
-  phone: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
-}
 
 
 
-function User(this: object, {id, email, password, phone, role}:userInfo) {
+const User:User.Interface = function User(this: any, {id, email, phone}:User.credentials):User.Instance {
   try {
     const ROLES = ['admin', 'vip', 'premium', 'member', 'basic'];
     Object.freeze(ROLES);
 
-    if (new.target === undefined) return new User({id, email, password, phone, role});
-
-    Object.defineProperties(this, {
+    const newUser = Object.create(null, {
       id: {
-        value: new ID(id),
+        value: ID(id || ID.generate()),
         enumerable: true
       },
       email: {
-        value: new Email(email),
-        enumerable: true
-      },
-      password: {
-        value: new Password(password),
+        value: Email(email),
         enumerable: true
       },
       phone: {
-        value: new Phone(phone),
+        value: Phone(phone),
         enumerable: true
       },
-      role: {
-        value: new Role(role),
-        enumerable: true
-      },
-      init: {
-        value: ({id, email, password, phone, role, created_at, updated_at}:userInit) => {
+      auth: {
+        value: function() {
           try {
-            if (id) this.id.set(id);
-
-            if (email) this.email.set(email);
-            else throw new Error('email required.');
-
-            if (password) this.password.set(password);
-            else throw new Error('password required.');
-
-            if (phone) this.phone.set(phone);
-            else throw new Error('phone required.');
-
-            if (role) this.role.set(role);
-
-
-            return true;
+            Object.defineProperty(this, 'auth', {
+              value: Auth(this.info()),
+              enumerable: true,
+              configurable: false,
+            })
           }
           catch (error) {
-            throw error;
+            console.log(error);
+
           }
         },
-        enumerable: true
+        enumerable: true,
+        configurable: true
       },
+      // init: {
+      //   value: ({id, email, phone, created_at, updated_at}:User.credentials) => {
+      //     try {
+
+      //       if (id) this.id.set(id);
+
+      //       if (email) this.email.set(email);
+      //       else throw new Error('email required.');
+
+      //       if (phone) this.phone.set(phone);
+      //       else throw new Error('phone required.');
+
+      //       return true;
+      //     }
+      //     catch (error) {
+      //       throw error;
+      //     }
+      //   },
+      //   enumerable: true
+      // },
       info: {
-        value: () => {
+        value: function getUserInfo() {
           try {
             const id = this.id.get();
             const email = this.email.get();
-            const password = this.password.get();
             const phone = this.phone.get();
-            const role = this.role.get();
 
-            return {id, email, password, phone, role};
+            return {id, email, phone};
           }
           catch (error) {
             throw error;
@@ -100,6 +85,8 @@ function User(this: object, {id, email, password, phone, role}:userInfo) {
       },
     });
 
+    return newUser
+
   }
   catch (error) {
     throw error;
@@ -107,53 +94,20 @@ function User(this: object, {id, email, password, phone, role}:userInfo) {
 }
 
 
-Object.defineProperty(User, 'validate', {
-    value: Object.create(null, {
-      id: {
-        value: ID.validate,
-        enumerable: true
-      },
-      email: {
-        value: Email.validate,
-        enumerable: true
-      },
-      phone: {
-        value: Phone.validate,
-        enumerable: true
-      },
-      password: {
-        value: Password.validate,
-        enumerable: true
-      }
-    }),
-    enumerable: true
-  });
-
 export default User;
-export {ID, Email, Password, Phone, Role, Auth, JWT};
+export {ID, Email, Phone, Auth, JWT};
 
-// const auth = new Auth({ id: '853069f6-5da6-4ba8-9690-2bd99828142e', email: 'yousif@almudhaf.com', phone: '+96555968743'});
+const user = User({ id: '2b7ed861-830e-4209-a4db-583e87d3fcc4', email: 'yousif@almudhaf.com', phone: '+96555968743'});
+console.log(user);
+user.auth();
 
-// const factor = await auth.get('YF0261a4615035d337669c92202f795515');
-// console.log(factor);
+console.log(user);
+user.auth.get('YF0261a760302a7b7d8dd53026c9877450').then(function(response) {
 
-// const verify = await auth.verify('3393742');
-// console.log(verify);
+  console.log(response);
 
-// const authenticate = await auth.authenticate('6239422');g
-// console.log(authenticate);
-
-// const attempts = await auth.listAttempts();
-// console.log(attempts);
-
-// const result = await auth.delete();
-// console.log(result);
-
-const user = new User({ id: '6f56b969-3d22-4c73-8fc5-51145fea882e', email: 'yousif@almudhaf.com', phone: '+96555968743', password: '12345678' })
-
-// console.log(user)
-// console.log(user.info())
-// console.log(user.role.set('admin'))
-// console.log(user.info())
-// console.log(user.phone.set('+96555968742'))
-// console.log(user.info())
+  return user.auth.verify('320696');
+})
+.catch(function(error) {
+  console.log(error);
+});
