@@ -3,49 +3,32 @@ dotenv.config();
 
 import crypto from 'crypto';
 import fs from 'fs';
-// import { fileURLToPath } from 'url';
-  import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import validator from 'validator';
 const { isJWT } = validator;
 import * as jose from 'jose';
-import { JWTPayload } from 'jose';
 const { SignJWT, jwtVerify, EncryptJWT, jwtDecrypt} = jose;
-// import { SignJWT } from 'jose/jwt/sign';
-// import { jwtVerify } from 'jose/jwt/verify';
-// import { EncryptJWT } from 'jose/jwt/encrypt';
-// import { jwtDecrypt } from 'jose/jwt/decrypt';
 
+import {JWT, JWT as typeJWT} from '../../../User';
 
-interface jwtOptions {
-  issuer?: null | string,
-  audience?: null | string,
-  expiration?: null | string,
-  encrypted: boolean,
-  subject?: null | string,
-  path: string;
-}
-
-// interface fnJWT {
-//   new (o: jwtOptions): any;    // constructor
-//   (o: jwtOptions): any;       // call
-// }
-
-function JWT(o: jwtOptions) {
+const JWT:typeJWT.Interface = function newJWT(o?):typeJWT.Instance {
   try {
-    if (new.target === undefined) return new JWT(o);
 
+    // defaults
     const {
         issuer,
         audience,
         expiration,
-        encrypted,
+        encrypted = false,
         subject,
-        path
+        path = '.secrets'
     } = o ?? { issuer: null, audience: null, expiration: null, encrypted: false, subject: null, path: '.secrets' };
+
 
 
     const secret = Object.create({}, {
@@ -55,14 +38,14 @@ function JWT(o: jwtOptions) {
         },
       });
 
-    Object.defineProperties(this, {
+    const methods = Object.create(null, {
 
       validateJWT: {
         value: validateJWT,
         enumerable: true
       },
       signJWT: {
-        value: async function signToken(payload) {
+        value: async function signToken(payload: any) {
           try {
 
             const {iss, aud, sub, exp, ...other} = payload;
@@ -92,9 +75,13 @@ function JWT(o: jwtOptions) {
         enumerable: true
       },
       verifyJWT: {
-        value: async function verifyToken(token) {
+        value: async function verifyToken(token:string) {
           try {
-            let claims = {};
+
+
+
+
+            let claims: {issuer?:string, audience?:string} | undefined = {};
             if (issuer) claims.issuer = issuer;
             if (audience) claims.audience = audience;
             if (Object.keys(claims)) claims = undefined;
@@ -113,7 +100,7 @@ function JWT(o: jwtOptions) {
         enumerable: true
       },
       encryptJWT: {
-        value: async function encryptToken(payload: JWTPayload){
+        value: async function encryptToken(payload: any){
           try {
 
 
@@ -149,7 +136,7 @@ function JWT(o: jwtOptions) {
         value: async function decryptToken(token:string) {
           try {
 
-            let claims = {};
+            let claims: { issuer?: string, audience?: string; } | undefined = {};
             if (issuer) claims.issuer = issuer;
             if (audience) claims.audience = audience;
             if (Object.keys(claims)) claims = undefined;
@@ -169,13 +156,13 @@ function JWT(o: jwtOptions) {
       },
     });
 
-    return Object.create(this, {
+    return Object.create(null, {
       sign: {
-        value: async (payload:object) => {
+        value: async function (payload:object){
           try {
 
-            if (encrypted) return await this.encryptJWT(payload);
-            else return await this.signJWT(payload);
+            if (encrypted) return await methods.encryptJWT(payload);
+            else return await methods.signJWT(payload);
           }
           catch (error) {
             throw error;
@@ -184,10 +171,10 @@ function JWT(o: jwtOptions) {
         enumerable: true
       },
       verify: {
-        value: async (token:string) => {
+        value: async function (token:string) {
           try {
-            if (encrypted) return await this.decryptJWT(token);
-            else return await this.verifyJWT(token);
+            if (encrypted) return await methods.decryptJWT(token);
+            else return await methods.verifyJWT(token);
 
           } catch (error) {
             throw error;
@@ -203,8 +190,6 @@ function JWT(o: jwtOptions) {
 }
 
 export default JWT;
-
-
 
 // HELPER FUNCTIONS
 ///////////////////
@@ -280,7 +265,7 @@ function genTokens(path:string) {
     const pathSecretKey = join(pathDirectory, '.secretKey.jwt');
 
     const hash = crypto.createHash('sha256');
-    const key = crypto.generateKeySync('aes', {length: 256});
+    const key:any = crypto.generateKeySync('aes', {length: 256});
     const secretKey = hash.digest(key);
     const passphrase = crypto.randomBytes(64).toString('base64');
 

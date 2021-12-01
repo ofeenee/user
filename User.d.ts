@@ -59,3 +59,23 @@ namespace Auth {
     listAttempts: () => Promise<Array[object]>;
   }
 }
+
+
+
+namespace JWT {
+  export interface Interface {
+    (o:JWT.Options): JWT.Instance;
+  }
+  export interface Instance {
+    sign: (payload: object) => Promise<string>;
+    verify: (token: string) => Promise<object>;
+  }
+  export interface Options {
+    issuer?: null | string,
+    audience?: null | string,
+    expiration?: null | string,
+    encrypted?: boolean,
+    subject?: null | string,
+    path?: string;
+  }
+}
