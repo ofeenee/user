@@ -32,10 +32,10 @@ import QRCode from 'qrcode-svg';
 import validator from 'validator';
 const { isUUID, isEmail, isMobilePhone } = validator;
 
+import {Auth, Auth as typeAuth} from '../../../User';
 
-function Auth(this: any, {email, phone, id}:{email:string, phone:string, id:string}):object {
+const Auth:typeAuth.Interface = function Authenticator(this: any, {email, phone, id}):Auth.Instance {
   try {
-    if (!new.target) return new Auth(id);
 
     if (id === null || typeof id !== 'string' || isUUID(id) === false) throw new Error('Invalid ID');
     if (email === null || typeof email !== 'string' || isEmail(email) === false) throw new Error('Invalid Email');
@@ -96,9 +96,10 @@ function Auth(this: any, {email, phone, id}:{email:string, phone:string, id:stri
       }
     });
 
-    return Object.defineProperties(this, {
+
+    const Authenticator:Auth.Instance =  Object.create(null, {
       create: {
-        value: async () => {
+        value: async function () {
           try {
             const factor = await service.entities(id).newFactors.create({
               factorType: 'totp',
@@ -239,6 +240,8 @@ function Auth(this: any, {email, phone, id}:{email:string, phone:string, id:stri
         enumerable: true,
       }
     });
+
+    return Authenticator;
   }
   catch (error) {
     throw error;
@@ -247,8 +250,9 @@ function Auth(this: any, {email, phone, id}:{email:string, phone:string, id:stri
 
 export default Auth;
 
-module.exports.default = Auth;
-module.exports = Auth;
+
+
+
 
 
 // HELPER FUNCTIONS

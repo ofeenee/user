@@ -5,8 +5,8 @@ namespace typeID {
   export interface Interface {
     validate(s: string): boolean;
     generate(): string;
-    (this: any,s: string): Instance;
-    new (this: any, s: string): Instance;
+    (this: any,s: string): typeID.Instance;
+    new (this: any, s: string): typeID.Instance;
   }
   export interface Instance {
     id: v4;
@@ -18,8 +18,8 @@ namespace typeID {
 namespace typeEmail {
   export interface Interface {
     validate(s: string): boolean;
-    (this: any, s: string): Instance;
-    new (this: any, s: string): Instance;
+    (this: any, s: string): typeEmail.Instance;
+    new (this: any, s: string): typeEmail.Instance;
   }
   export interface Instance {
     set: (s: string) => string;
@@ -32,8 +32,8 @@ namespace typeEmail {
 namespace typePhone {
   export interface Interface {
     validate(s: string): boolean;
-    (this: any, s: string): Instance;
-    new (this: any, s: string): Instance;
+    (this: any, s: string): typePhone.Instance;
+    new (this: any, s: string): typePhone.Instance;
   }
   export interface Instance {
     set: (s: string) => string;
@@ -42,4 +42,20 @@ namespace typePhone {
     sendVerificationCodeCall: () => Promise<object>;
     confirmVerificationCode: (s: string) => Promise<object>;
   };
+}
+
+namespace Auth {
+  export interface Interface {
+    ({id, email, phone}:{id:string, email:string, phone:string}): Auth.Instance;
+  }
+  export interface Instance {
+    create: () => Promise<object>;
+    get: (sid:string) => Promise<object>;
+    list: () => Promise<Array[object]>;
+    verify: (code:string) => Promise<object>;
+    delete: () => Promise<object>;
+    close: () => Promise<object>;
+    authenticate: (code: string, details: null | object) => Promise<object>;
+    listAttempts: () => Promise<Array[object]>;
+  }
 }
